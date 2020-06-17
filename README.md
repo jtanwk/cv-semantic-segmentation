@@ -6,11 +6,12 @@ This project implements the zoom-out feature approach to semantic segmentation w
 
 With limited access to GPU hardware, this project simplifies upon the paper's approach in at least one key way. Instead of averaging hypercolumns over superpixels, I randomly sample a few (3) pixel-wise hypercolumns for use in the shallow classifier. Implementing superpixels is a likely next step for this project.
 
+The data source for this project is the [xView2](https://xview2.org/) dataset of satellite imagery, originally provided as part of a challenge to predict the extent of natural disaster damage. Again, due to hardware limitations, I've split each 1024x1024 image into 16 separate 256x256 images.
 
 ## Initial results
 
 ![](img/results_3epochs.png)
-*From left to right: (1) input image, (2) input labels, (3) predicted segmentation*
+<p align="center"><it>From left to right: (1) input image, (2) input labels, (3) predicted segmentation</it></p>
 
 From even just 3 epochs of training, the classifier does pretty well if it can segment on color, as in the top row. It misses out on finer details or densely-packed shapes, as with the second row. It also has trouble disambiguating buildings from roads or other brightly-colored features with high contrast to the ground near to them, as with the third row.
 
@@ -22,7 +23,8 @@ Currently, my best results have been from using the following features and hyper
 - Dense classifier is trained for 3 epochs. I will update this repo as I get more consecutive rounds of training in.
 
 ![](img/learning_curve_fc.png)
-*Loss curves for the shallow classifier (result of `train_cls.py`)*
+
+<p align="center"><it>Loss curves for the shallow classifier (result of `train_cls.py`)</it></p>
 
 
 ## Directory Structure
