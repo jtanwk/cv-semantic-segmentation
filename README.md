@@ -11,7 +11,7 @@ The data source for this project is the [xView2](https://xview2.org/) dataset of
 ## Initial results
 
 <p align="center">
-    <img src="img/results_3epochs.png" />
+    <img src="img/results_3epochs.png" /><br>
     <i>From left to right: (1) input image, (2) input labels, (3) predicted segmentation</i>
 </p>
 
@@ -21,6 +21,7 @@ Currently, my best results have been from using the following features and hyper
 - Zoomout features: using activations for all 13 convolutional layers in VGG16, giving a 4755-element feature vector for every pixel.
 - Class weights for Cross Entropy Loss: Using inverse weights from the true distribution of `[0.05, 0.95]` for labels `[0, 1]` respectively
 - Optimizer: Adam with a learning rate of 0.001 and no learning rate decay
+- Hidden layer size: 1024 units
 - Shallow classifier is trained for 40 epochs, with a plateau in loss curves around the 20-epoch mark
 - Dense classifier is trained for 3 epochs. I will update this repo as I get more consecutive rounds of training in.
 
@@ -29,8 +30,9 @@ Currently, my best results have been from using the following features and hyper
     <i>Loss curves for the shallow classifier trained over 40 epochs (result of `train_cls.py`)</i>
 </p>
 
+## Technical Details
 
-## Directory Structure
+### Directory Structure
 
 ```
 .
@@ -44,7 +46,7 @@ Currently, my best results have been from using the following features and hyper
 └── train_seg.py: loads weights from FC classifier into 1x1 CNN kernel and trains a dense classifier on images.
 ```
 
-## How to run
+### How to run
 
 A full training sequence from scratch has 3 main steps:
 
@@ -52,9 +54,14 @@ A full training sequence from scratch has 3 main steps:
 2. Run `train_cls.py` to train the fully-connected classifier on the intermediate features.
 3. Run `train_seg.py` to load pre-trained weights from the fully-connected classifier and use them to generate semantic segmentation predictions.
 
-*Note:* I only had access to 4 hours of GPU training at one time, which is sufficient for about 3 full epochs. I got around this by saving the model state after each run, and having the model load the saved state at the start of the next training run. You can do this by running `train_seg.py` with the `--load_saved_model` argument set to `True`. If set to `False`, the classifier will be trained from scratch.
+Ona GeForce GTX 1080 Ti and the full dataset:
+- `sampling.py` runs in 45 minutes
+- `train_cls.py` runs in 8 minutes (40 epochs)
+- `train_seg.py` runs in 4 hours (3 epochs - see below)
 
-## Hyperparameter and architecture tuning
+*Note:* I only had access to 4 hours of GPU training at one time, which is sufficient for about 3 full epochs for `train_seg.py`. I got around this by saving the model state after each run, and having the model load the saved state at the start of the next training run. You can do this by running `train_seg.py` with the `--load_saved_model` argument set to `True`. If set to `False`, the classifier will be trained from scratch.
+
+### Hyperparameter and architecture tuning
 
 - Inverse class weights: reflecting true class counts or manually set
 - Pretrained model to use for zoomout layers: VGG11 or VGG16
@@ -63,3 +70,4 @@ A full training sequence from scratch has 3 main steps:
 - Learning rate: 0.01, 0.001, 0.0001 as starting point
 - Learning rate decay: Using step decay and gamma = 0.1, step size = 10 or 20
 - With and without dropout layers in the shallow fully-connected classifier  
+- Both the shallow and dense classifiers have a hidden layer with 1024 units
