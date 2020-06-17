@@ -10,8 +10,8 @@ The data source for this project is the [xView2](https://xview2.org/) dataset of
 
 ## Initial results
 
-![](img/results_3epochs.png)
 <p align="center">
+    <img src="img/results_3epochs.png" />
     <i>From left to right: (1) input image, (2) input labels, (3) predicted segmentation</i>
 </p>
 
@@ -24,9 +24,9 @@ Currently, my best results have been from using the following features and hyper
 - Shallow classifier is trained for 40 epochs, with a plateau in loss curves around the 20-epoch mark
 - Dense classifier is trained for 3 epochs. I will update this repo as I get more consecutive rounds of training in.
 
-![](img/learning_curve_fc.png)
 <p align="center">
-    <i>Loss curves for the shallow classifier (result of `train_cls.py`)</i>
+    <img src="img/learning_curve_fc.png" />
+    <i>Loss curves for the shallow classifier trained over 40 epochs (result of `train_cls.py`)</i>
 </p>
 
 
