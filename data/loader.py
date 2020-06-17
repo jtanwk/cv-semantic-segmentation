@@ -10,31 +10,46 @@
 #  - Randomly chooses half of the dataset to be test data on init.
 
 import os
-from PIL import Image
 import torch
 import numpy as np
+from PIL import Image
 from torch.utils import data
 from imageio import imwrite
 
 class xView2(data.Dataset):
 
-    def __init__(self, root='/scratch/jonathantan/cropped/images', split='train'):
+    def __init__(self, root='/scratch/jonathantan/cv/cropped/images_full', split='train'):
         self.root = root
         self.split = split
-        self.im_height = 512
-        self.im_width = 512
+        self.im_height = 256
+        self.im_width = 256
 
         # Populate list of image filepaths, pre-disaster only
         image_paths = os.listdir(self.root)
 
-        # Split into train and validation sets
+        # Split into train, test, and validation sets
         image_paths = np.array(image_paths)
-        num_train = int(len(image_paths) // 2)
-        train_idx = np.random.choice(range(len(image_paths)), size=num_train)
+        num_train = int(np.round(len(image_paths) * 0.6))
+        num_test = (len(image_paths) - num_train) // 2
+
+        # Get indices for test, train, and validation sets
+        all_idx = range(len(image_paths))
+        train_idx = np.random.choice(all_idx, size=num_train, replace=False)
+        remaining_idx = [x for x in all_idx if x not in train_idx]
+        test_idx = np.random.choice(remaining_idx, size=num_test, replace=False)
+        val_idx = [x for x in remaining_idx if x not in test_idx]
+
+        # Construct boolean masks
         test_mask = np.ones(len(image_paths), np.bool)
         test_mask[train_idx] = 0
+        test_mask[val_idx] = 0
+        val_mask = np.ones(len(image_paths), np.bool)
+        val_mask[train_idx] = 0
+        val_mask[test_idx] = 0
+
         self.files = {
             'train': image_paths[train_idx],
+            'val': image_paths[val_mask],
             'test': image_paths[test_mask]
         }
 

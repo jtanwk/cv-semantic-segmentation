@@ -22,13 +22,16 @@ class Zoomout(nn.Module):
 
         # load the pre-trained ImageNet CNN and normalize per
         # https://pytorch.org/docs/stable/torchvision/models.html
-        self.vgg = models.vgg11(pretrained=True)
+        self.vgg = models.vgg16(pretrained=True)
         self.feature_list = list(self.vgg.features.children())
         self.norm = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                          std=[0.229, 0.224, 0.225])
 
-        # Get indices of layers whose activations we want
-        self.zoomout_layers = [1, 4, 9, 14, 19]
+        # Get indices of Conv2d layers to extract activations from
+        # vgg11 conv layers before maxpool layers
+        # self.zoomout_layers = [0, 3, 8, 13, 18]
+        # vgg16 conv layers before maxpool layers
+        # self.zoomout_layers = [2, 7, 14, 21, 28]
 
     def forward(self, x):
 
@@ -47,7 +50,7 @@ class Zoomout(nn.Module):
 
             # Append upsampled layer activations
             x = layer(x)
-            if idx in self.zoomout_layers:
+            if isinstance(layer, nn.Conv2d):
 
                 # Upsample to original H and W using bilinear interpolation
                 upsampled = F.interpolate(x,
