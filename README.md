@@ -11,7 +11,9 @@ The data source for this project is the [xView2](https://xview2.org/) dataset of
 ## Initial results
 
 ![](img/results_3epochs.png)
-<p align="center"><it>From left to right: (1) input image, (2) input labels, (3) predicted segmentation</it></p>
+<p align="center">
+    <i>From left to right: (1) input image, (2) input labels, (3) predicted segmentation</i>
+</p>
 
 From even just 3 epochs of training, the classifier does pretty well if it can segment on color, as in the top row. It misses out on finer details or densely-packed shapes, as with the second row. It also has trouble disambiguating buildings from roads or other brightly-colored features with high contrast to the ground near to them, as with the third row.
 
@@ -23,8 +25,9 @@ Currently, my best results have been from using the following features and hyper
 - Dense classifier is trained for 3 epochs. I will update this repo as I get more consecutive rounds of training in.
 
 ![](img/learning_curve_fc.png)
-
-<p align="center"><it>Loss curves for the shallow classifier (result of `train_cls.py`)</it></p>
+<p align="center">
+    <i>Loss curves for the shallow classifier (result of `train_cls.py`)</i>
+</p>
 
 
 ## Directory Structure
