@@ -26,8 +26,10 @@ Currently, my best results have been from using the following features and hyper
 - Dense classifier is trained for 3 epochs. I will update this repo as I get more consecutive rounds of training in.
 
 <p align="center">
-    <img src="img/learning_curve_fc.png" /><br>
-    <i>Loss curves for the shallow classifier trained over 40 epochs (result of `train_cls.py`)</i>
+    <img src="img/learning_curve_fc.png" width="320" height="240"/>
+    <img src="img/learning_curve_fc.png" width="320" height="240"/>
+    <br>
+    <i>Loss curves for the shallow classifier trained over 40 epochs (result of train_cls.py) and the dense classifier trained over 3 epochs (result of train_seg.py)</i>
 </p>
 
 ## Technical Details
