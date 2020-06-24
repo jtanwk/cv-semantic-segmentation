@@ -1,10 +1,20 @@
 # cv-semantic-segmentation
 
-## Overview
+## Problem Overview
+
+This project uses deep learning and computer vision to identify building footprints from satellite imagery. Given poor building records in rural areas of many countries, being able to identify where buildings are from publicly-available data can play an important role in disaster risk management. This project is inspired largely by the [Open Cities AI Challenge](https://www.drivendata.org/competitions/60/building-segmentation-disaster-resilience/) at DrivenData.
+
+## Technical Overview
+
+After 18 epochs of training, the best model achieves a 75% mean Jaccard score, defined as the intersection-over-union. IU is a useful metric here due to heavily imbalanced class frequencies: building footprints represent only 5% of all pixels in the training dataset.
+
+### Method
 
 This project implements the zoom-out feature approach to semantic segmentation with Convolutional Neural Networks as laid out by [Mostajabi et al. (2015)](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Mostajabi_Feedforward_Semantic_Segmentation_2015_CVPR_paper.pdf).
 
 With limited access to GPU hardware, this project simplifies upon the paper's approach in at least one key way. Instead of averaging hypercolumns over superpixels, I randomly sample a few (3) pixel-wise hypercolumns for use in the shallow classifier. Implementing superpixel-wise classification is a likely next step for this project.
+
+### Data
 
 The data source for this project is the [xView2](https://xview2.org/) dataset of satellite imagery, originally provided as part of a challenge to predict the extent of natural disaster damage. Again, due to hardware limitations, I've split each 1024x1024 image into 16 separate 256x256 images.
 
@@ -27,6 +37,15 @@ From even just 3 epochs of training, the classifier does pretty well if it can s
 </p>
 
 Compared to the results from 3 epochs, the segmentation process is slowly getting better at distinguishing boundaries between densely-packed shapes. Compare the results here to the second row above.
+
+<p align="center">
+    <img src="img/results.png" /><br>
+    <i>Performance metrics for the best model</i>
+</p>
+
+The best model achieves a 75% mean Jaccard score, defined as the intersection-over-union (IU) score. I chose to focus on IU score as the dataset was heavily imbalanced: building footprints represent only 5% of all pixels in the training dataset, meaning that a naive accuracy of 95% could be reached just by labeling all pixels as background.
+
+### Model tuning
 
 Currently, my best results have been from using the following features and hyperparameters:
 - Zoomout features: using activations for all 13 convolutional layers in VGG16, giving a 4755-element feature vector (the literature calls these "hypercolumns") for every pixel.
